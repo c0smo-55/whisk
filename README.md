@@ -4,7 +4,7 @@ Tap your pixel pantry, hit **whisk**, and an AI pastry brain designs you a compl
 recipe card — measurements, steps, smart substitutions, and a barista-grade coffee
 pairing — rendered in a hand-drawn 8-bit pastel world.
 
-**Live demo:** _(Vercel link here)_
+**Live demo:** _(Vercel link here)_ · **New here? Read the [User Guide](USER_GUIDE.md).**
 
 ## Why this exists
 
@@ -64,12 +64,21 @@ npm install
 npm run dev          # demo mode, no key needed
 ```
 
-For live generation, copy `.env.example` to `.env.local` and add **one** key:
+For live generation, copy `.env.example` to `.env.local` and configure **one** provider
+(full walkthrough in the [User Guide](USER_GUIDE.md)):
 
-- **Free:** a [Groq](https://console.groq.com/keys) key (`LLM_API_KEY`) — runs
-  open-source Llama 3.3 70B, no credit card needed. The same variable works
-  with DeepSeek or OpenRouter by overriding `LLM_BASE_URL` + `LLM_MODEL`.
-- **Paid:** an `ANTHROPIC_API_KEY` for Claude.
+- **Free — Google Gemini** (recommended): grab a key at
+  [aistudio.google.com](https://aistudio.google.com), then set
+  ```
+  LLM_API_KEY=your_key
+  LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+  LLM_MODEL=gemini-2.5-flash
+  ```
+- **Free — Groq**: a [console.groq.com](https://console.groq.com/keys) key as
+  `LLM_API_KEY` (defaults target Groq + open-source Llama 3.3 70B, so no other
+  vars needed). Same setup works for DeepSeek or OpenRouter by overriding
+  `LLM_BASE_URL` + `LLM_MODEL`.
+- **Paid:** an `ANTHROPIC_API_KEY` for Claude (takes priority if both are set).
 
 ## Stack
 
