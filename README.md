@@ -6,6 +6,27 @@ pairing — rendered in a hand-drawn 8-bit pastel world.
 
 **Live demo:** _(Vercel link here)_ · **New here? Read the [User Guide](USER_GUIDE.md).**
 
+## What is this? (the no-jargon version)
+
+Whisk is a website where an AI acts as your personal pastry chef. You tap in
+whatever's in your kitchen — flour, matcha, strawberries — and it first pitches
+**three desserts you could actually make**, designed around exactly those
+ingredients. Pick your favourite, and it invents the complete recipe on the
+spot: measurements, step-by-step instructions, substitutions for anything
+you're missing, and even a coffee pairing.
+
+There's no recipe database hiding underneath. Every recipe is generated fresh
+by an AI (the same kind of technology behind ChatGPT). The engineering work is
+in making that AI behave like a **reliable product component**: my site asks it
+for answers in a strict, organised format, checks them, and renders them as an
+interactive recipe card — not a wall of chatbot text.
+
+The look is equally deliberate: every ingredient is a hand-drawn pixel-art
+sprite (think Game Boy, but pastel), you tap them into a mixing bowl, and while
+your recipe is being created a little whisk stirs your ingredients until
+sparkles burst. I bake and I'm a certified barista — this is the project only
+I would have made.
+
 ## Why this exists
 
 Most "AI demos" are a text box and a wall of prose. Whisk treats the LLM as a
