@@ -110,19 +110,21 @@ function DessertShowcase({
         {/* fork & knife, floating on either side of the stand */}
         <motion.span
           aria-hidden
-          className="absolute left-3 top-[34%]"
-          animate={{ y: [0, -7, 0], rotate: [-4, 2, -4] }}
+          className="absolute -left-2 top-[30%]"
+          style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.95))" }}
+          animate={{ y: [0, -7, 0], rotate: [-6, 2, -6] }}
           transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <PixelSprite name="fork" size={34} />
+          <PixelSprite name="fork" size={52} />
         </motion.span>
         <motion.span
           aria-hidden
-          className="absolute right-3 top-[34%]"
-          animate={{ y: [0, 7, 0], rotate: [4, -2, 4] }}
+          className="absolute -right-2 top-[30%]"
+          style={{ filter: "drop-shadow(0 0 10px rgba(255,255,255,0.95))" }}
+          animate={{ y: [0, 7, 0], rotate: [6, -2, 6] }}
           transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <PixelSprite name="knife" size={34} />
+          <PixelSprite name="knife" size={52} />
         </motion.span>
 
         {/* the glass cake stand */}
