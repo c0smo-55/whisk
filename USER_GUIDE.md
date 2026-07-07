@@ -47,6 +47,9 @@ Open http://localhost:3000. That's demo mode — to make it real AI, keep readin
 
 ## 4. Getting a free AI key
 
+> **Just visiting the deployed site?** You don't need any of this — the AI runs
+> on the site's own key. Keys are only for people running their own copy.
+
 Whisk speaks to any OpenAI-compatible LLM API. Two genuinely free options:
 
 ### Option A — Google Gemini (easiest if you have a Google account)
@@ -108,6 +111,7 @@ read at startup. `.env.local` is gitignored, so your key can never be pushed.
 |---|---|
 | Every result shows the `demo bake` badge | No key is loaded: check `.env.local` exists in the project root, then restart the dev server. |
 | "Whisk couldn't dream up a recipe just now" | Usually a rate limit (free tiers allow ~10 requests/min) — wait a minute. If it persists, check the terminal running `npm run dev` for the real error. |
+| "Whisk needs a breather — try again in a minute." | You hit Whisk's own per-visitor limit (8 requests/min). It resets on its own. |
 | Terminal shows `MALFORMED_FUNCTION_CALL` | The model ran out of output tokens. Budgets in `lib/openaiCompat.ts` are already generous — if you switched to another thinking-heavy model, raise them further. |
 | Terminal shows `LLM API error 401/403` | The key is wrong or expired — re-copy it into `.env.local` and restart. |
 | Page looks broken after a server restart | Hard refresh: `Ctrl + Shift + R`. |

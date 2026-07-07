@@ -19,7 +19,9 @@ There's no recipe database hiding underneath. Every recipe is generated fresh
 by an AI (the same kind of technology behind ChatGPT). The engineering work is
 in making that AI behave like a **reliable product component**: my site asks it
 for answers in a strict, organised format, checks them, and renders them as an
-interactive recipe card — not a wall of chatbot text.
+interactive recipe card — not a wall of chatbot text. And if you're just
+*visiting* the site, there's nothing to set up — the AI runs on the server,
+so you only bring your ingredients.
 
 The look is equally deliberate: every ingredient is a hand-drawn pixel-art
 sprite (think Game Boy, but pastel), you tap them into a mixing bowl, and while
@@ -49,7 +51,12 @@ and rendered as a real, interactive UI — not chat.
   OpenRouter, even a local Ollama — same schemas, same contract. Off-schema
   output from smaller models is clamped to safe values, not crashed on.
 - **Server-side only** — keys live in environment variables and every model
-  call happens in Next.js route handlers, so nothing sensitive ever reaches the browser.
+  call happens in Next.js route handlers, so nothing sensitive ever reaches the
+  browser. Visitors never need their own key: the deployed site's AI runs on
+  the server's key, like any real product.
+- **Abuse-resistant** — [`lib/rateLimit.ts`](lib/rateLimit.ts) caps each visitor
+  at 8 requests/minute (~4 bakes), so a single user can't drain the free-tier
+  quota for everyone else.
 - **Deterministic fallback** — with no key at all, both stages serve from built-in
   demo pools, seeded by the bowl contents so different bowls still give different
   results, and the deployed site is always clickable for reviewers.

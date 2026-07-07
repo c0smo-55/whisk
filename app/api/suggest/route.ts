@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
 import { aiSuggestIdeas, liveProvider } from "@/lib/provider";
 import { DEMO_IDEAS, hashPick } from "@/lib/mock";
+import { clientIp, rateLimit } from "@/lib/rateLimit";
 import type { GenerateRequest, SuggestResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
+  if (!rateLimit(clientIp(request))) {
+    return NextResponse.json(
+      { error: "Whisk needs a breather — try again in a minute." },
+      { status: 429 }
+    );
+  }
+
   let body: GenerateRequest;
   try {
     body = await request.json();
