@@ -35,7 +35,7 @@ export default function RecipeCard({
   source,
 }: {
   recipe: Recipe;
-  source: "claude" | "demo";
+  source: "ai" | "demo";
 }) {
   const [checked, setChecked] = useState<Set<number>>(new Set());
   const cardRef = useRef<HTMLDivElement>(null);

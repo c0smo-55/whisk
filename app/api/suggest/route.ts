@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { hasApiKey, suggestIdeas } from "@/lib/anthropic";
+import { aiSuggestIdeas, liveProvider } from "@/lib/provider";
 import { DEMO_IDEAS, hashPick } from "@/lib/mock";
 import type { GenerateRequest, SuggestResponse } from "@/lib/types";
 
@@ -20,9 +20,9 @@ export async function POST(request: Request) {
     );
   }
 
-  // No key → pick three demo ideas, seeded by the bowl so different
-  // bowls pitch different bakes.
-  if (!hasApiKey()) {
+  // No live provider → pick three demo ideas, seeded by the bowl so
+  // different bowls pitch different bakes.
+  if (!liveProvider()) {
     const start = hashPick(body.ingredients + (body.vibe ?? ""), DEMO_IDEAS.length);
     const ideas = [0, 1, 2].map((i) => DEMO_IDEAS[(start + i * 2) % DEMO_IDEAS.length]);
     const res: SuggestResponse = { ideas, source: "demo" };
@@ -30,8 +30,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const ideas = await suggestIdeas(body);
-    const res: SuggestResponse = { ideas, source: "claude" };
+    const ideas = await aiSuggestIdeas(body);
+    const res: SuggestResponse = { ideas, source: "ai" };
     return NextResponse.json(res);
   } catch (err) {
     console.error("suggestIdeas failed:", err);

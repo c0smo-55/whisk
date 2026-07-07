@@ -33,7 +33,7 @@ export interface GenerateRequest {
 
 export interface GenerateResponse {
   recipe: Recipe;
-  source: "claude" | "demo";
+  source: "ai" | "demo";
 }
 
 // Stage one of the agent pipeline: the AI pitches bakes before designing one.
@@ -45,5 +45,5 @@ export interface Idea {
 
 export interface SuggestResponse {
   ideas: Idea[];
-  source: "claude" | "demo";
+  source: "ai" | "demo";
 }

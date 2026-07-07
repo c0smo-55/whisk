@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { generateRecipe, hasApiKey } from "@/lib/anthropic";
+import { aiGenerateRecipe, liveProvider } from "@/lib/provider";
 import { DEMO_RECIPES, hashPick } from "@/lib/mock";
 import type { GenerateRequest, GenerateResponse } from "@/lib/types";
 
@@ -20,14 +20,12 @@ export async function POST(request: Request) {
     );
   }
 
-  // No key configured → serve a demo recipe so the deployed site always works.
-  // If the baker picked an idea whose title matches a demo recipe, honour it;
-  // otherwise pick deterministically from the bowl contents.
-  if (!hasApiKey()) {
+  // No live provider configured → serve a demo recipe so the deployed site
+  // always works. If the baker picked an idea whose title matches a demo
+  // recipe, honour it; otherwise pick deterministically from the bowl.
+  if (!liveProvider()) {
     const matched = body.chosen
-      ? DEMO_RECIPES.find((r) =>
-          r.title.toLowerCase().includes(body.chosen!.toLowerCase().slice(0, 12))
-        )
+      ? DEMO_RECIPES.find((r) => r.title.toLowerCase() === body.chosen!.toLowerCase())
       : undefined;
     const recipe =
       matched ??
@@ -37,8 +35,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const recipe = await generateRecipe(body);
-    const res: GenerateResponse = { recipe, source: "claude" };
+    const recipe = await aiGenerateRecipe(body);
+    const res: GenerateResponse = { recipe, source: "ai" };
     return NextResponse.json(res);
   } catch (err) {
     console.error("generateRecipe failed:", err);

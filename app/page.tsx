@@ -22,8 +22,8 @@ export default function Home() {
   const [vibe, setVibe] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [ideas, setIdeas] = useState<{ list: Idea[]; source: "claude" | "demo" } | null>(null);
-  const [result, setResult] = useState<{ recipe: Recipe; source: "claude" | "demo" } | null>(
+  const [ideas, setIdeas] = useState<{ list: Idea[]; source: "ai" | "demo" } | null>(null);
+  const [result, setResult] = useState<{ recipe: Recipe; source: "ai" | "demo" } | null>(
     null
   );
   const [showCard, setShowCard] = useState(false);

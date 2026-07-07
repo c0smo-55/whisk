@@ -13,39 +13,6 @@ export function hashPick(seed: string, size: number): number {
   return h % size;
 }
 
-export const DEMO_IDEAS: Idea[] = [
-  {
-    title: "Matcha Cloud Cake",
-    sprite: "cake",
-    hook: "Jiggly, barely-sweet, and the matcha does the talking.",
-  },
-  {
-    title: "Banana Choc-Chunk Loaf",
-    sprite: "bread",
-    hook: "Those spotty bananas were waiting for exactly this.",
-  },
-  {
-    title: "Strawberry Milk Shortcake Cookies",
-    sprite: "cookie",
-    hook: "A shortcake that fits in one hand — and in your lunchbox.",
-  },
-  {
-    title: "Lemon Honey Butter Tart",
-    sprite: "pie",
-    hook: "Bright, sticky, golden — sunshine in pastry form.",
-  },
-  {
-    title: "Brown-Butter Vanilla Cupcakes",
-    sprite: "cupcake",
-    hook: "Nutty brown butter turns plain vanilla into a flex.",
-  },
-  {
-    title: "Chocolate Glaze Donuts",
-    sprite: "donut",
-    hook: "Baked, not fried — glossy glaze, zero regrets.",
-  },
-];
-
 export const DEMO_RECIPES: Recipe[] = [
   {
     title: "Matcha Condensed-Milk Cloud Cake",
@@ -185,4 +152,91 @@ export const DEMO_RECIPES: Recipe[] = [
     bakerTip:
       "Take the curd off the heat the moment it coats the spoon — carryover heat finishes it.",
   },
+  {
+    title: "Brown-Butter Vanilla Cupcakes",
+    sprite: "cupcake",
+    description:
+      "Plain vanilla, upgraded: nutty brown butter in the crumb and a silky vanilla-bean frosting on top.",
+    difficulty: "medium",
+    totalMinutes: 50,
+    servings: "12 cupcakes",
+    ingredients: [
+      { item: "Butter", amount: "150 g" },
+      { item: "Plain flour", amount: "180 g" },
+      { item: "Caster sugar", amount: "140 g" },
+      { item: "Eggs", amount: "2" },
+      { item: "Milk", amount: "100 ml" },
+      { item: "Vanilla extract", amount: "2 tsp" },
+      { item: "Baking powder", amount: "1.5 tsp" },
+    ],
+    steps: [
+      "Melt the butter over medium heat until it foams, smells nutty and turns amber. Cool slightly.",
+      "Whisk brown butter with sugar, then beat in eggs, vanilla and milk.",
+      "Fold in flour and baking powder until just smooth — stop at the last streak.",
+      "Divide between 12 cases and bake at 175°C for 18–20 min until they spring back.",
+      "Whip the remaining brown butter with icing sugar and a splash of milk; swirl on once cool.",
+    ],
+    substitutions: [
+      { missing: "Vanilla extract", use: "1 tsp honey + a pinch of cinnamon" },
+      { missing: "Milk", use: "Any plant milk, or yogurt thinned with water" },
+    ],
+    coffeePairing: {
+      drink: "Cortado",
+      why: "Small, warm and nutty — it echoes the brown butter instead of shouting over it.",
+    },
+    bakerTip:
+      "Watch the butter like a hawk after it foams — nutty to burnt takes about ten seconds.",
+  },
+  {
+    title: "Chocolate Glaze Donuts",
+    sprite: "donut",
+    description:
+      "Fluffy baked rings dunked in a glossy chocolate glaze — no fryer, no drama, all shine.",
+    difficulty: "easy",
+    totalMinutes: 35,
+    servings: "10 donuts",
+    ingredients: [
+      { item: "Plain flour", amount: "200 g" },
+      { item: "Caster sugar", amount: "90 g" },
+      { item: "Egg", amount: "1" },
+      { item: "Milk", amount: "160 ml" },
+      { item: "Butter, melted", amount: "50 g" },
+      { item: "Dark chocolate", amount: "100 g" },
+      { item: "Baking powder", amount: "2 tsp" },
+    ],
+    steps: [
+      "Heat oven to 180°C and grease a donut pan (or improvise rings with a muffin tin and foil balls).",
+      "Whisk flour, sugar and baking powder; separately whisk egg, milk and melted butter.",
+      "Combine wet into dry with as few strokes as you can get away with.",
+      "Pipe into the pan and bake 10–12 min until they bounce back to a poke.",
+      "Melt the chocolate with a knob of butter, dunk the cooled donuts top-first, and let the glaze set.",
+    ],
+    substitutions: [
+      { missing: "Donut pan", use: "Muffin tin — they become 'donut buns', still excellent" },
+      { missing: "Dark chocolate", use: "Cocoa + icing sugar + hot water, whisked glossy" },
+    ],
+    coffeePairing: {
+      drink: "Long black",
+      why: "Clean bitterness against a sweet glaze — the classic donut-shop equation.",
+    },
+    bakerTip:
+      "Dunk while the glaze is warm and fluid; reheat it gently the second it starts to thicken.",
+  },
 ];
+
+// The demo idea pitches are derived straight from the demo recipes, so a
+// picked idea always has its exact recipe waiting in stage two.
+const DEMO_HOOKS: string[] = [
+  "Jiggly, barely-sweet, and the matcha does the talking.",
+  "Those spotty bananas were waiting for exactly this.",
+  "A shortcake that fits in one hand — and in your lunchbox.",
+  "Bright, sticky, golden — sunshine in pastry form.",
+  "Nutty brown butter turns plain vanilla into a flex.",
+  "Baked, not fried — glossy glaze, zero regrets.",
+];
+
+export const DEMO_IDEAS: Idea[] = DEMO_RECIPES.map((r, i) => ({
+  title: r.title,
+  sprite: r.sprite,
+  hook: DEMO_HOOKS[i] ?? r.description,
+}));

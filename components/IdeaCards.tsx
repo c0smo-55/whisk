@@ -13,7 +13,7 @@ export default function IdeaCards({
   disabled,
 }: {
   ideas: Idea[];
-  source: "claude" | "demo";
+  source: "ai" | "demo";
   onPick: (idea: Idea) => void;
   disabled: boolean;
 }) {

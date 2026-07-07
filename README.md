@@ -18,15 +18,20 @@ and rendered as a real, interactive UI — not chat.
   three distinct bakes for your exact bowl; the one you pick is fed into stage two
   (`/api/generate`), which designs the full recipe around that choice. Two chained,
   structured LLM calls, not one prompt-and-pray.
-- **Tool-use as an output contract** — [`lib/anthropic.ts`](lib/anthropic.ts) defines
-  `record_ideas` and `record_recipe` tool schemas and sets `tool_choice` to force
-  Claude to "call" them. Responses are validated, typed JSON (`Idea[]`, `Recipe`),
-  never prose that needs parsing.
-- **Server-side only** — the key lives in an environment variable and every model
+- **Tool-use as an output contract** — [`lib/schemas.ts`](lib/schemas.ts) defines
+  `record_ideas` and `record_recipe` JSON Schemas, and both stages force the model
+  to "call" them (`tool_choice`). Responses are validated, typed JSON (`Idea[]`,
+  `Recipe`), never prose that needs parsing.
+- **Provider-agnostic** — [`lib/provider.ts`](lib/provider.ts) routes to Claude
+  ([`lib/anthropic.ts`](lib/anthropic.ts)) or any OpenAI-compatible API
+  ([`lib/openaiCompat.ts`](lib/openaiCompat.ts)): Groq's free tier, DeepSeek,
+  OpenRouter, even a local Ollama — same schemas, same contract. Off-schema
+  output from smaller models is clamped to safe values, not crashed on.
+- **Server-side only** — keys live in environment variables and every model
   call happens in Next.js route handlers, so nothing sensitive ever reaches the browser.
-- **Deterministic fallback** — with no `ANTHROPIC_API_KEY` set, both stages serve
-  from built-in demo pools, seeded by the bowl contents so different bowls still
-  give different results, and the deployed site is always clickable for reviewers.
+- **Deterministic fallback** — with no key at all, both stages serve from built-in
+  demo pools, seeded by the bowl contents so different bowls still give different
+  results, and the deployed site is always clickable for reviewers.
 
 ## The design system
 
@@ -59,10 +64,14 @@ npm install
 npm run dev          # demo mode, no key needed
 ```
 
-For live generation, copy `.env.example` to `.env.local` and add your
-`ANTHROPIC_API_KEY`.
+For live generation, copy `.env.example` to `.env.local` and add **one** key:
+
+- **Free:** a [Groq](https://console.groq.com/keys) key (`LLM_API_KEY`) — runs
+  open-source Llama 3.3 70B, no credit card needed. The same variable works
+  with DeepSeek or OpenRouter by overriding `LLM_BASE_URL` + `LLM_MODEL`.
+- **Paid:** an `ANTHROPIC_API_KEY` for Claude.
 
 ## Stack
 
 Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS · Framer Motion ·
-Claude API (`@anthropic-ai/sdk`)
+Claude API / any OpenAI-compatible LLM (Groq, DeepSeek, OpenRouter…)
