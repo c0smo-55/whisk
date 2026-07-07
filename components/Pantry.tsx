@@ -44,8 +44,10 @@ export default function Pantry({
               onClick={() => onToggle(key)}
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.9 }}
-              className={`pixel-btn flex flex-col items-center gap-2 px-2 py-3 ${
-                active ? "bg-petal/70" : "bg-white/70 hover:bg-blush"
+              className={`glass flex flex-col items-center gap-2 !rounded-2xl px-2 py-3 transition-shadow ${
+                active
+                  ? "!border-petal/80 !bg-petal/40 shadow-[0_0_0_3px_rgba(255,158,199,0.45)]"
+                  : "hover:!bg-white/60"
               }`}
               aria-pressed={active}
             >
@@ -53,7 +55,7 @@ export default function Pantry({
                 <PixelSprite name={key} size={40} />
               </motion.span>
               <span
-                className={`font-pixel text-[8px] ${active ? "text-white" : "text-plum/80"}`}
+                className={`font-pixel text-[8px] ${active ? "text-rose" : "text-plum/80"}`}
               >
                 {label}
               </span>
@@ -70,7 +72,7 @@ export default function Pantry({
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && submitCustom()}
             placeholder="something else? condensed milk, oats…"
-            className="pixel-btn flex-1 bg-white/80 px-4 py-3 text-sm font-bold text-plum outline-none placeholder:text-plum/35"
+            className="glass flex-1 px-5 py-3 text-sm font-bold text-plum outline-none placeholder:text-plum/35 focus:!border-petal/70"
           />
           <button
             type="button"
@@ -87,7 +89,7 @@ export default function Pantry({
                 key={item}
                 type="button"
                 onClick={() => onRemoveCustom(item)}
-                className="border-2 border-plum bg-white/80 px-3 py-1 text-xs font-bold text-plum hover:bg-blush"
+                className="glass-pill px-3 py-1 text-xs font-bold text-plum hover:!bg-blush/70"
                 title="remove"
               >
                 {item} ✕

@@ -21,7 +21,7 @@ export default function BakingLoader({ tick }: { tick: number }) {
         <PixelSprite name="whisk" size={64} />
       </motion.div>
 
-      <div className="pixel-panel flex h-6 w-56 items-center gap-1 !border-2 !shadow-none p-1">
+      <div className="glass-pill flex h-6 w-56 items-center gap-1 overflow-hidden p-1">
         {Array.from({ length: 12 }, (_, i) => (
           <motion.span
             key={i}

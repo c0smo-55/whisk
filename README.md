@@ -31,12 +31,18 @@ rects by [`components/PixelSprite.tsx`](components/PixelSprite.tsx). No emojis,
 no icon fonts, no image assets: the whole sprite sheet is ~200 lines of data
 that scales razor-sharp to any size.
 
-The interaction layer (Framer Motion):
+The interaction layer (Framer Motion) fuses **Apple-style glassmorphism** with the
+8-bit sprites:
 
-- 🍓 **Tappable pantry** — ingredients pop into a mixing bowl
-- 🌸 **Apple-style scroll** — the hero scales/dissolves as you scroll; sections spring in
-- ☁️ **Living background** — drifting aurora gradients + parallax pixel clouds
-- ✨ **Sprinkle burst** when a recipe lands, tilt-on-hover recipe card
+- 🎀 **Hero landing page** — cursor-parallax sprite layers, a floating glass
+  "product shot" recipe card that counter-tilts against the mouse, and a
+  pausable sprite marquee
+- 🍓 **Tappable glass pantry** — ingredients pop into a mixing bowl
+- 🌸 **Apple-style scroll story** — the hero scales/dissolves as you scroll;
+  frosted feature cards and the studio spring in on view
+- ☁️ **Living background** — drifting aurora gradients + parallax pixel clouds,
+  behind layered backdrop-blur glass panels
+- ✨ **Cursor sparkle trail**, sprinkle burst on reveal, tilt-on-hover recipe card
 - ✅ **Tappable bake checklist** and a pixel-heart difficulty gauge
 
 Palette: pastel pink with lavender and periwinkle. Type: Press Start 2P + Nunito.

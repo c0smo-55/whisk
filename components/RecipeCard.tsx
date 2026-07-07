@@ -76,10 +76,10 @@ export default function RecipeCard({
         initial={{ opacity: 0, y: 60, scale: 0.92 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: "spring", stiffness: 90, damping: 16 }}
-        className="pixel-panel relative mx-auto max-w-2xl p-6 sm:p-10"
+        className="glass-strong relative mx-auto max-w-2xl p-6 sm:p-10"
       >
         {source === "demo" && (
-          <span className="absolute right-4 top-4 border-2 border-plum bg-butter px-2 py-1 font-pixel text-[8px]">
+          <span className="glass-pill absolute right-4 top-4 !bg-butter/60 px-3 py-1.5 font-pixel text-[8px]">
             demo bake
           </span>
         )}
@@ -118,7 +118,7 @@ export default function RecipeCard({
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.15 + i * 0.06 }}
-                className="flex items-center gap-3 border-2 border-plum/15 bg-white/50 px-3 py-2"
+                className="glass flex items-center gap-3 !rounded-xl px-3 py-2"
               >
                 <PixelSprite name={matchSprite(ing.item)} size={26} />
                 <span className="flex-1 text-sm font-bold text-plum">{ing.item}</span>
@@ -146,10 +146,10 @@ export default function RecipeCard({
                   <button
                     type="button"
                     onClick={() => toggleStep(i)}
-                    className={`flex w-full items-start gap-3 border-2 px-3 py-2.5 text-left transition-colors ${
+                    className={`glass flex w-full items-start gap-3 !rounded-xl px-3 py-2.5 text-left transition-colors ${
                       done
-                        ? "border-lavender/60 bg-lavender/15"
-                        : "border-plum/15 bg-white/50 hover:border-petal/60"
+                        ? "!border-lavender/70 !bg-lavender/25"
+                        : "hover:!border-petal/60"
                     }`}
                   >
                     <span
@@ -180,7 +180,7 @@ export default function RecipeCard({
             <h3 className="mb-4 font-pixel text-[10px] uppercase text-rose">Out of it? Swap it</h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {recipe.substitutions.map((sub, i) => (
-                <div key={i} className="border-2 border-plum/15 bg-white/50 px-3 py-2 text-sm">
+                <div key={i} className="glass !rounded-xl px-3 py-2 text-sm">
                   <span className="font-bold text-plum">{sub.missing}</span>
                   <span className="mx-2 font-pixel text-[9px] text-periwinkle">&gt;&gt;</span>
                   <span className="font-semibold text-plum/70">{sub.use}</span>
@@ -191,7 +191,7 @@ export default function RecipeCard({
         )}
 
         {/* coffee pairing — the barista's corner */}
-        <section className="mt-8 border-[3px] border-plum bg-sky/60 p-4">
+        <section className="glass mt-8 !bg-sky/40 p-5">
           <h3 className="mb-2 font-pixel text-[10px] uppercase text-plum">
             Barista&apos;s pairing
           </h3>
@@ -200,7 +200,7 @@ export default function RecipeCard({
         </section>
 
         {/* baker's tip */}
-        <section className="mt-4 border-[3px] border-plum bg-butter/50 p-4">
+        <section className="glass mt-4 !bg-butter/30 p-5">
           <h3 className="mb-2 font-pixel text-[10px] uppercase text-plum">Make-or-break tip</h3>
           <p className="text-sm font-semibold text-plum/80">{recipe.bakerTip}</p>
         </section>

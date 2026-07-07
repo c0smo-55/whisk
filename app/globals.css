@@ -77,14 +77,39 @@ body {
   to { transform: translate(12vw, -14vh) scale(1.2); }
 }
 
-/* ---- pixel UI primitives ---- */
-.pixel-panel {
-  background: rgba(255, 255, 255, 0.72);
-  border: 3px solid var(--plum);
-  box-shadow: 6px 6px 0 0 rgba(75, 48, 89, 0.28);
-  backdrop-filter: blur(10px);
+/* ---- Apple-flavoured glass ---- */
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.25));
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 1.5rem;
+  box-shadow:
+    0 20px 50px -20px rgba(75, 48, 89, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
+.glass-strong {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.45));
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 1.75rem;
+  box-shadow:
+    0 30px 70px -25px rgba(75, 48, 89, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 9999px;
+  box-shadow: 0 10px 30px -12px rgba(75, 48, 89, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ---- pixel UI primitives (the crunchy 8-bit counterpoint) ---- */
 .pixel-btn {
   border: 3px solid var(--plum);
   box-shadow: 4px 4px 0 0 rgba(75, 48, 89, 0.35);
@@ -101,11 +126,28 @@ body {
   box-shadow: 1px 1px 0 0 rgba(75, 48, 89, 0.35);
 }
 
+/* ---- sprite marquee ---- */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 26s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* respect users who turn animations off */
 @media (prefers-reduced-motion: reduce) {
   .aurora::before,
   .aurora::after,
-  .aurora-blue {
+  .aurora-blue,
+  .marquee {
     animation: none;
   }
 }

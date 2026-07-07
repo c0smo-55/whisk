@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import type { GenerateResponse, Recipe } from "@/lib/types";
 import { PANTRY, type SpriteName } from "@/lib/sprites";
 import PixelSprite from "@/components/PixelSprite";
 import FloatingPixels from "@/components/FloatingPixels";
+import CursorSparkles from "@/components/CursorSparkles";
+import HeroLanding from "@/components/HeroLanding";
+import FeatureCards from "@/components/FeatureCards";
 import Pantry from "@/components/Pantry";
 import BakingLoader from "@/components/BakingLoader";
 import RecipeCard from "@/components/RecipeCard";
@@ -22,16 +25,6 @@ export default function Home() {
   );
 
   const resultRef = useRef<HTMLDivElement>(null);
-
-  // Apple-style hero: it scales down and dissolves as you scroll into the studio.
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.82]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
   useEffect(() => {
     if (!loading) return;
@@ -80,62 +73,54 @@ export default function Home() {
 
   return (
     <main className="relative">
+      <CursorSparkles />
       <FloatingPixels />
 
-      {/* ---- hero ---- */}
-      <section ref={heroRef} className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
-        <motion.div
-          style={{ scale: heroScale, opacity: heroOpacity, y: heroY }}
-          className="flex flex-col items-center gap-8 text-center"
-        >
-          <motion.div
-            animate={{ rotate: [-6, 6, -6] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <PixelSprite name="whisk" size={96} />
-          </motion.div>
-
-          <h1 className="font-pixel text-3xl leading-tight text-plum sm:text-5xl">
-            <span className="text-rose">W</span>
-            <span className="text-lavender">H</span>
-            <span className="text-periwinkle">I</span>
-            <span className="text-rose">S</span>
-            <span className="text-lavender">K</span>
-          </h1>
-
-          <p className="max-w-md text-lg font-bold text-plum/70">
-            Tap what&apos;s in your kitchen. An AI pastry brain designs the bake —
-            coffee pairing included.
-          </p>
-
-          <motion.a
+      {/* floating glass nav pill */}
+      <motion.nav
+        initial={{ x: "-50%", y: -60, opacity: 0 }}
+        animate={{ x: "-50%", y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 80, damping: 14, delay: 0.2 }}
+        className="fixed left-1/2 top-5 z-40"
+      >
+        <div className="glass-pill flex items-center gap-5 px-5 py-2.5">
+          <span className="flex items-center gap-2">
+            <PixelSprite name="whisk" size={18} />
+            <span className="font-pixel text-[9px] text-plum">whisk</span>
+          </span>
+          <a
             href="#studio"
-            className="pixel-btn bg-petal px-6 py-3 font-pixel text-[11px] text-white"
-            whileHover={{ y: -2 }}
+            className="font-pixel text-[8px] text-plum/60 transition-colors hover:text-rose"
           >
-            open the studio
-          </motion.a>
-        </motion.div>
+            studio
+          </a>
+          <a
+            href="https://github.com/c0smo-55/whisk"
+            target="_blank"
+            rel="noreferrer"
+            className="font-pixel text-[8px] text-plum/60 transition-colors hover:text-rose"
+          >
+            github
+          </a>
+        </div>
+      </motion.nav>
 
-        <motion.div
-          className="absolute bottom-10"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <span className="font-pixel text-[10px] text-plum/40">▼ scroll</span>
-        </motion.div>
-      </section>
+      {/* ---- hero landing ---- */}
+      <HeroLanding />
+
+      {/* ---- apple-style feature story ---- */}
+      <FeatureCards />
 
       {/* ---- the studio ---- */}
       <motion.section
         id="studio"
-        className="relative z-10 mx-auto max-w-3xl px-4 pb-24"
+        className="relative z-10 mx-auto max-w-3xl scroll-mt-24 px-4 pb-24"
         initial={{ opacity: 0, y: 80, scale: 0.94 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ type: "spring", stiffness: 70, damping: 18 }}
       >
-        <div className="pixel-panel p-6 sm:p-10">
+        <div className="glass-strong p-6 sm:p-10">
           <h2 className="mb-2 text-center font-pixel text-sm text-plum">the pantry shelf</h2>
           <p className="mb-8 text-center text-sm font-semibold text-plum/60">
             tap ingredients into the bowl
@@ -154,7 +139,7 @@ export default function Home() {
               value={vibe}
               onChange={(e) => setVibe(e.target.value)}
               placeholder="the vibe (optional): cosy rainy afternoon, birthday…"
-              className="pixel-btn w-full bg-white/80 px-4 py-3 text-sm font-bold text-plum outline-none placeholder:text-plum/35"
+              className="glass w-full px-5 py-3.5 text-sm font-bold text-plum outline-none placeholder:text-plum/35 focus:border-petal/70"
             />
 
             <motion.button
@@ -183,13 +168,13 @@ export default function Home() {
       {/* ---- the bake ---- */}
       <section ref={resultRef} className="relative z-10 mx-auto max-w-3xl scroll-mt-8 px-4 pb-32">
         {loading && (
-          <div className="pixel-panel">
+          <div className="glass-strong">
             <BakingLoader tick={tick} />
           </div>
         )}
 
         {error && (
-          <div className="pixel-panel border-rose bg-blush p-6 text-center">
+          <div className="glass border-rose/40 p-6 text-center">
             <p className="font-pixel text-[10px] text-rose">{error}</p>
           </div>
         )}
