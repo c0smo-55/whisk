@@ -14,14 +14,19 @@ and rendered as a real, interactive UI — not chat.
 
 ## How the AI part works
 
-- **Tool-use as an output contract** — [`lib/anthropic.ts`](lib/anthropic.ts) defines a
-  `record_recipe` tool schema and sets `tool_choice` to force Claude to "call" it.
-  The response is validated, typed JSON (`Recipe`), never prose that needs parsing.
+- **A two-stage agent pipeline** — stage one (`/api/suggest`) has the model pitch
+  three distinct bakes for your exact bowl; the one you pick is fed into stage two
+  (`/api/generate`), which designs the full recipe around that choice. Two chained,
+  structured LLM calls, not one prompt-and-pray.
+- **Tool-use as an output contract** — [`lib/anthropic.ts`](lib/anthropic.ts) defines
+  `record_ideas` and `record_recipe` tool schemas and sets `tool_choice` to force
+  Claude to "call" them. Responses are validated, typed JSON (`Idea[]`, `Recipe`),
+  never prose that needs parsing.
 - **Server-side only** — the key lives in an environment variable and every model
-  call happens in a Next.js route handler ([`app/api/generate/route.ts`](app/api/generate/route.ts)),
-  so nothing sensitive ever reaches the browser.
-- **Deterministic fallback** — with no `ANTHROPIC_API_KEY` set, the API serves a
-  built-in demo recipe, so the deployed site is always clickable for reviewers.
+  call happens in Next.js route handlers, so nothing sensitive ever reaches the browser.
+- **Deterministic fallback** — with no `ANTHROPIC_API_KEY` set, both stages serve
+  from built-in demo pools, seeded by the bowl contents so different bowls still
+  give different results, and the deployed site is always clickable for reviewers.
 
 ## The design system
 

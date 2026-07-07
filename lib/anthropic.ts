@@ -1,5 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { DESSERT_SPRITES, type GenerateRequest, type Recipe } from "./types";
+import {
+  DESSERT_SPRITES,
+  type GenerateRequest,
+  type Idea,
+  type Recipe,
+} from "./types";
 
 // A tool schema is the clean way to force Claude into exactly our Recipe shape —
 // the model must "call" record_recipe with valid args, so we get typed JSON back
@@ -74,6 +79,39 @@ const RECIPE_TOOL: Anthropic.Tool = {
   },
 };
 
+// Stage one of the pipeline: pitch three distinct bakes before designing one.
+const IDEAS_TOOL: Anthropic.Tool = {
+  name: "record_ideas",
+  description: "Record exactly three distinct bake ideas for these ingredients.",
+  input_schema: {
+    type: "object",
+    properties: {
+      ideas: {
+        type: "array",
+        minItems: 3,
+        maxItems: 3,
+        items: {
+          type: "object",
+          properties: {
+            title: { type: "string", description: "Short, appetising bake name." },
+            sprite: {
+              type: "string",
+              enum: [...DESSERT_SPRITES],
+              description: "The pixel-art icon that best matches the bake.",
+            },
+            hook: {
+              type: "string",
+              description: "One line on why this bake fits their bowl.",
+            },
+          },
+          required: ["title", "sprite", "hook"],
+        },
+      },
+    },
+    required: ["ideas"],
+  },
+};
+
 const SYSTEM = `You are Whisk, a warm, precise baking studio assistant with a barista's palate.
 Given a home baker's available ingredients (and an optional vibe), design ONE achievable recipe that
 leans on what they have. Prefer realistic home quantities and metric units. Keep the tone friendly and
@@ -83,13 +121,45 @@ export function hasApiKey(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);
 }
 
+export async function suggestIdeas(req: GenerateRequest): Promise<Idea[]> {
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  const userPrompt = [
+    `Ingredients I have: ${req.ingredients}`,
+    req.vibe ? `Vibe I'm going for: ${req.vibe}` : "",
+    "Pitch three distinct bakes I could make with these. Call record_ideas.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-5",
+    max_tokens: 700,
+    system: SYSTEM,
+    tools: [IDEAS_TOOL],
+    tool_choice: { type: "tool", name: "record_ideas" },
+    messages: [{ role: "user", content: userPrompt }],
+  });
+
+  const toolUse = message.content.find(
+    (block): block is Anthropic.ToolUseBlock => block.type === "tool_use"
+  );
+  if (!toolUse) {
+    throw new Error("Claude did not return ideas.");
+  }
+  return (toolUse.input as { ideas: Idea[] }).ideas;
+}
+
 export async function generateRecipe(req: GenerateRequest): Promise<Recipe> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const userPrompt = [
     `Ingredients I have: ${req.ingredients}`,
     req.vibe ? `Vibe I'm going for: ${req.vibe}` : "",
-    "Design one recipe that mostly uses these. Call record_recipe.",
+    req.chosen
+      ? `I picked this bake from your suggestions: ${req.chosen}. Design exactly that.`
+      : "Design one recipe that mostly uses these.",
+    "Call record_recipe.",
   ]
     .filter(Boolean)
     .join("\n");

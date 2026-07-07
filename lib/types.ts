@@ -28,9 +28,22 @@ export interface Recipe {
 export interface GenerateRequest {
   ingredients: string; // free text: "flour, eggs, matcha, condensed milk"
   vibe?: string; // optional: "something cute for a rainy afternoon"
+  chosen?: string; // the idea the baker picked from the suggestions step
 }
 
 export interface GenerateResponse {
   recipe: Recipe;
+  source: "claude" | "demo";
+}
+
+// Stage one of the agent pipeline: the AI pitches bakes before designing one.
+export interface Idea {
+  title: string;
+  sprite: DessertSprite;
+  hook: string; // one appetising line on why this fits the bowl
+}
+
+export interface SuggestResponse {
+  ideas: Idea[];
   source: "claude" | "demo";
 }

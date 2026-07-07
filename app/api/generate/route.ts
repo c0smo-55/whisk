@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateRecipe, hasApiKey } from "@/lib/anthropic";
-import { DEMO_RECIPE } from "@/lib/mock";
+import { DEMO_RECIPES, hashPick } from "@/lib/mock";
 import type { GenerateRequest, GenerateResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -20,9 +20,19 @@ export async function POST(request: Request) {
     );
   }
 
-  // No key configured → serve the demo recipe so the deployed site always works.
+  // No key configured → serve a demo recipe so the deployed site always works.
+  // If the baker picked an idea whose title matches a demo recipe, honour it;
+  // otherwise pick deterministically from the bowl contents.
   if (!hasApiKey()) {
-    const res: GenerateResponse = { recipe: DEMO_RECIPE, source: "demo" };
+    const matched = body.chosen
+      ? DEMO_RECIPES.find((r) =>
+          r.title.toLowerCase().includes(body.chosen!.toLowerCase().slice(0, 12))
+        )
+      : undefined;
+    const recipe =
+      matched ??
+      DEMO_RECIPES[hashPick(body.ingredients + (body.chosen ?? ""), DEMO_RECIPES.length)];
+    const res: GenerateResponse = { recipe, source: "demo" };
     return NextResponse.json(res);
   }
 
