@@ -245,7 +245,7 @@ export default function HeroLanding() {
   return (
     <section
       ref={heroRef}
-      className="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 pb-24 pt-28"
+      className="relative z-10 flex min-h-screen flex-col items-center justify-center overflow-x-clip px-4 pb-24 pt-28"
     >
       {/* depth layer: big soft sprites drifting behind the glass */}
       <motion.div style={layerBack} className="pointer-events-none absolute inset-0">
