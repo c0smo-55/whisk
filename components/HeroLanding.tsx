@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useScroll,
@@ -10,49 +11,116 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { PANTRY } from "@/lib/sprites";
+import { DEMO_RECIPES } from "@/lib/mock";
 import PixelSprite from "./PixelSprite";
 
-// A floating glass "product shot": a miniature recipe card that bobs and
-// counter-tilts against the cursor, Apple-keynote style.
-function GlassPreviewCard({
+const HEARTS: Record<string, number> = { easy: 1, medium: 2, advanced: 3 };
+
+// The hero showcase: desserts float through centre stage one by one,
+// Apple-keynote style. Hovering (or tapping) pauses the parade and unfolds
+// that bake's details — all pulled from real recipe data.
+function DessertShowcase({
   tiltX,
   tiltY,
 }: {
   tiltX: MotionValue<number>;
   tiltY: MotionValue<number>;
 }) {
+  const [index, setIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const item = DEMO_RECIPES[index];
+
+  useEffect(() => {
+    if (hovered) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % DEMO_RECIPES.length), 3600);
+    return () => clearInterval(id);
+  }, [hovered]);
+
   return (
     <motion.div
       style={{ rotateX: tiltY, rotateY: tiltX, transformStyle: "preserve-3d" }}
-      className="glass-strong w-64 p-5 sm:w-72"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      onTap={() => setHovered((h) => !h)}
+      className="glass-strong flex min-h-[21rem] w-72 cursor-pointer flex-col items-center justify-between p-6 sm:w-80"
     >
-      <motion.div
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-        className="flex flex-col items-center gap-3"
-      >
-        <PixelSprite name="cake" size={64} />
-        <span className="font-pixel text-[9px] text-plum">matcha cloud cake</span>
-        <div className="flex gap-1.5">
-          {[0, 1].map((i) => (
-            <PixelSprite key={i} name="heart" size={14} />
-          ))}
-          <span className="opacity-20 grayscale">
-            <PixelSprite name="heart" size={14} />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={item.title}
+          initial={{ x: 90, opacity: 0, scale: 0.6, rotate: 8 }}
+          animate={{ x: 0, opacity: 1, scale: 1, rotate: 0 }}
+          exit={{ x: -90, opacity: 0, scale: 0.6, rotate: -8 }}
+          transition={{ type: "spring", stiffness: 130, damping: 17 }}
+          className="flex w-full flex-1 flex-col items-center gap-3"
+        >
+          <motion.span
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <PixelSprite name={item.sprite} size={hovered ? 64 : 92} />
+          </motion.span>
+          <span className="text-center font-pixel text-[9px] leading-relaxed text-plum">
+            {item.title.toLowerCase()}
           </span>
-        </div>
-        <div className="w-full space-y-1.5">
-          <div className="h-2 w-full rounded-full bg-petal/40" />
-          <div className="h-2 w-4/5 rounded-full bg-lavender/40" />
-          <div className="h-2 w-3/5 rounded-full bg-periwinkle/40" />
-        </div>
-        <div className="mt-1 flex w-full items-center gap-2 rounded-xl bg-sky/50 px-3 py-2">
-          <PixelSprite name="milk" size={18} />
-          <span className="text-[11px] font-bold text-plum/70">
-            pairs with an iced shakerato
-          </span>
-        </div>
-      </motion.div>
+
+          {hovered ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex w-full flex-col gap-2.5"
+            >
+              <div className="flex items-center justify-center gap-4">
+                <span className="flex gap-1">
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className={i < HEARTS[item.difficulty] ? "" : "opacity-20 grayscale"}
+                    >
+                      <PixelSprite name="heart" size={13} />
+                    </span>
+                  ))}
+                </span>
+                <span className="font-pixel text-[8px] text-plum/70">
+                  {item.totalMinutes} min
+                </span>
+                <span className="font-pixel text-[8px] text-plum/70">{item.servings}</span>
+              </div>
+              <p className="line-clamp-3 text-center text-xs font-semibold leading-relaxed text-plum/65">
+                {item.description}
+              </p>
+              <div className="flex items-center gap-2 rounded-xl bg-sky/50 px-3 py-2">
+                <PixelSprite name="milk" size={16} />
+                <span className="line-clamp-2 text-[11px] font-bold leading-snug text-plum/70">
+                  pairs with {item.coffeePairing.drink.toLowerCase()}
+                </span>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="flex w-full flex-col items-center gap-3">
+              <div className="w-full space-y-1.5">
+                <div className="h-2 w-full rounded-full bg-petal/40" />
+                <div className="mx-auto h-2 w-4/5 rounded-full bg-lavender/40" />
+                <div className="mx-auto h-2 w-3/5 rounded-full bg-periwinkle/40" />
+              </div>
+              <span className="font-pixel text-[8px] text-plum/40">
+                hover for details
+              </span>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* progress dots */}
+      <div className="mt-4 flex gap-2">
+        {DEMO_RECIPES.map((r, i) => (
+          <span
+            key={r.title}
+            className={`h-2 w-2 transition-colors ${
+              i === index ? "bg-rose" : "bg-plum/15"
+            }`}
+          />
+        ))}
+      </div>
     </motion.div>
   );
 }
@@ -177,7 +245,7 @@ export default function HeroLanding() {
               <PixelSprite name="heart" size={36} />
             </motion.span>
           </span>
-          <GlassPreviewCard tiltX={cardTiltX} tiltY={cardTiltY} />
+          <DessertShowcase tiltX={cardTiltX} tiltY={cardTiltY} />
         </motion.div>
       </motion.div>
 
