@@ -309,6 +309,40 @@ export const SPRITES: Record<string, SpriteDef> = {
     ],
     palette: { W: "#FFFFFF" },
   },
+  fork: {
+    grid: [
+      "S.S.S",
+      "S.S.S",
+      "S.S.S",
+      "SSSSS",
+      ".SSS.",
+      "..L..",
+      "..L..",
+      "..L..",
+      "..L..",
+      "..L..",
+      "..L..",
+      ".LLL.",
+    ],
+    palette: { S: "#E8E1F2", L: "#B79CED" },
+  },
+  knife: {
+    grid: [
+      ".SS..",
+      ".SSS.",
+      ".SSS.",
+      ".SSS.",
+      ".SSS.",
+      ".SSS.",
+      "..SS.",
+      "..L..",
+      "..L..",
+      "..L..",
+      "..L..",
+      ".LLL.",
+    ],
+    palette: { S: "#E8E1F2", L: "#B79CED" },
+  },
 };
 
 export type SpriteName = keyof typeof SPRITES;

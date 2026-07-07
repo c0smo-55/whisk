@@ -61,21 +61,33 @@ function DessertShowcase({
       onTap={() => setHovered((h) => !h)}
       className="relative flex cursor-pointer flex-col items-center"
     >
-      {/* pulsing glow behind the item */}
+      {/* outer glow: a breathing pastel halo */}
       <motion.div
         aria-hidden
-        className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background:
-            "radial-gradient(circle, rgba(255,158,199,0.6) 0%, rgba(183,156,237,0.4) 45%, rgba(143,184,255,0.2) 62%, transparent 72%)",
-          filter: "blur(26px)",
+            "radial-gradient(circle, rgba(255,158,199,0.7) 0%, rgba(183,156,237,0.45) 45%, rgba(143,184,255,0.25) 62%, transparent 72%)",
+          filter: "blur(30px)",
         }}
-        animate={{ scale: [1, 1.22, 1], opacity: [0.65, 1, 0.65] }}
+        animate={{ scale: [1, 1.22, 1], opacity: [0.7, 1, 0.7] }}
         transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
       />
+      {/* inner glow: a bright core right behind the dessert */}
+      <motion.div
+        aria-hidden
+        className="absolute left-1/2 top-[38%] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,214,232,0.6) 50%, transparent 70%)",
+          filter: "blur(18px)",
+        }}
+        animate={{ scale: [1.15, 0.95, 1.15], opacity: [0.9, 0.6, 0.9] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-      {/* the item, centre stage */}
-      <div className="relative flex h-52 w-52 items-center justify-center">
+      {/* centre stage: dessert on a glass cake stand, cutlery at the ready */}
+      <div className="relative flex h-72 w-80 items-center justify-center">
         {/* orbiting twinkles */}
         {TWINKLES.map((t, i) => (
           <motion.span
@@ -95,19 +107,49 @@ function DessertShowcase({
           </motion.span>
         ))}
 
+        {/* fork & knife, floating on either side of the stand */}
+        <motion.span
+          aria-hidden
+          className="absolute left-3 top-[34%]"
+          animate={{ y: [0, -7, 0], rotate: [-4, 2, -4] }}
+          transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <PixelSprite name="fork" size={34} />
+        </motion.span>
+        <motion.span
+          aria-hidden
+          className="absolute right-3 top-[34%]"
+          animate={{ y: [0, 7, 0], rotate: [4, -2, 4] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <PixelSprite name="knife" size={34} />
+        </motion.span>
+
+        {/* the glass cake stand */}
+        <div
+          aria-hidden
+          className="absolute bottom-3 left-1/2 flex -translate-x-1/2 flex-col items-center"
+        >
+          <div className="h-7 w-56 rounded-[50%] border border-white/70 bg-gradient-to-b from-white/75 to-white/35 shadow-[0_14px_30px_-12px_rgba(75,48,89,0.45)] backdrop-blur-md" />
+          <div className="-mt-1 h-8 w-3 border-x border-white/60 bg-white/45 backdrop-blur-sm" />
+          <div className="h-2.5 w-24 rounded-[50%] border border-white/70 bg-white/55 backdrop-blur-sm" />
+        </div>
+
+        {/* the dessert, hovering just above its plate */}
         <AnimatePresence mode="wait">
           <motion.div
             key={item.title}
+            className="absolute bottom-16"
             initial={{ scale: 0, rotate: -18, opacity: 0 }}
             animate={{ scale: 1, rotate: 0, opacity: 1 }}
             exit={{ scale: 0, rotate: 18, opacity: 0 }}
             transition={{ type: "spring", stiffness: 160, damping: 15 }}
           >
             <motion.div
-              animate={{ y: [0, -14, 0], rotate: [-2, 2, -2] }}
+              animate={{ y: [0, -12, 0], rotate: [-2, 2, -2] }}
               transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
             >
-              <PixelSprite name={item.sprite} size={hovered ? 132 : 152} />
+              <PixelSprite name={item.sprite} size={hovered ? 128 : 148} />
             </motion.div>
           </motion.div>
         </AnimatePresence>
