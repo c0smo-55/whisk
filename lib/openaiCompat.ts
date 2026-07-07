@@ -56,13 +56,16 @@ async function callTool<T>(
   return JSON.parse(call.function.arguments) as T;
 }
 
+// Generous token budgets: thinking models (e.g. Gemini Flash) spend hidden
+// reasoning tokens from the same allowance — too tight a cap truncates the
+// function call itself (finish_reason: MALFORMED_FUNCTION_CALL).
 export async function compatSuggestIdeas(req: GenerateRequest): Promise<Idea[]> {
   const result = await callTool<{ ideas: Idea[] }>(
     "record_ideas",
     "Record exactly three distinct bake ideas for these ingredients.",
     IDEAS_SCHEMA,
     ideasPrompt(req.ingredients, req.vibe),
-    700
+    4096
   );
   return result.ideas;
 }
@@ -73,6 +76,6 @@ export async function compatGenerateRecipe(req: GenerateRequest): Promise<Recipe
     "Record the final designed recipe in structured form.",
     RECIPE_SCHEMA,
     recipePrompt(req.ingredients, req.vibe, req.chosen),
-    1400
+    8192
   );
 }
