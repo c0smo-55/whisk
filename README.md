@@ -1,4 +1,4 @@
-# 🎀 Whisk — AI baking studio
+# 🎀 Whisk — AI baking studio (still working on it)
 
 Tap your pixel pantry, hit **whisk**, and an AI pastry brain designs you a complete
 recipe card — measurements, steps, smart substitutions, and a barista-grade coffee
